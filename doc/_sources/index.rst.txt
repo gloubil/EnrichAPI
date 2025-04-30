@@ -1,0 +1,17 @@
+.. EnrichAPI documentation master file, created by
+   sphinx-quickstart on Tue Apr 29 15:08:06 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+EnrichAPI documentation
+=======================
+
+Bienvenue dans la doc de EnrichAPI.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Sections
+
+   api/apiIndex
+   code/codeIndex
+   credLinks/credLinksIndex

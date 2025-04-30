@@ -1,0 +1,18 @@
+**Ajouter un EnrichTool**
+=========================
+
+Pour ajouter un :doc:`enrichTool`, il faut implémenter son interface
+donc intégrer toutes ses méthodes.
+
+Les méthodes doivent retourner un dictionnaire de cette forme :
+
+``{"EnrichToolName" : "{Name}", "ToolMessage" : "{field} : {value}\n"}``
+
+Pour ajouter plusieurs champs dans un même :doc:`enrichTool`, retourner:
+
+``{"EnrichToolName" : "{Name}", "ToolMessage" : "{field1} : {value1}\n{field2} : {value2}\n..et ainsi de suite"}``
+
+
+Ensuite, il faut ajouter une instance du nouvel :doc:`enrichTool` dans :doc:`enrichApp`.
+Pour cela il faut importer la classe de votre :doc:`enrichTool` dans l'app puis
+l'ajouter dans le constructeur (__init__). Voir plus de détails dans la page :doc:`enrichApp`.

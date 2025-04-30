@@ -1,0 +1,17 @@
+API Usage
+=========
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Usage:
+
+Commands
+--------
+
+GET : /enrique?IOC=iocValue
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+IOCs params : ip, hash, mail, url
+
+Example :
+``/enrique?ip=0.0.0.0&hash=hejovnzeovze&mail=jesuisbogoss@univ-tours.fr&url=http://www.bogoss.com/``

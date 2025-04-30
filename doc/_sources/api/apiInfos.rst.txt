@@ -1,0 +1,6 @@
+**API Infos**
+=============
+
+EnrichAPI utilise plusieurs APIs pour enrichir un IOC.
+
+EnrichAPI utilise VirusTotal, Hybrid Analysis et AbuseIPDB.
