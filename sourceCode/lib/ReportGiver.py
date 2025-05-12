@@ -1,4 +1,9 @@
 from lib.EnrichTool import EnrichTool
+from multiprocessing import Pool
+
+def callTool(arg):
+    tool, iocs = arg
+    return tool.getReport(iocs)
 
 class ReportGiver:
     """
@@ -10,10 +15,11 @@ class ReportGiver:
         self.enrichTools = []
 
     def getReports(self, iocs : dict):
-        result = []
-        for tool in self.enrichTools:
-            result.append(tool.getReport(iocs))
-        return result
+        with Pool(processes=len(self.enrichTools)) as p:
+            args = [(tool, iocs) for tool in self.enrichTools]
+            result = p.map(callTool, args)
+
+            return result
     
     def register(self, tool : EnrichTool):
         self.enrichTools.append(tool)

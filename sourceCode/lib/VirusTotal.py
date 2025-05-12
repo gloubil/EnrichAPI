@@ -31,6 +31,8 @@ class VirusTotal(EnrichTool):
             response = req.get(url, headers=self.apiInfos)
             stats = response.json()["data"]["attributes"]["last_analysis_stats"]
             result["ToolMessage"] += f"score vt (ip) : {VirusTotal.getScore(stats)}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : ip report not handleled on {result["EnrichToolName"]}")
 
@@ -40,6 +42,8 @@ class VirusTotal(EnrichTool):
             response = req.get(url, headers=self.apiInfos)
             stats = response.json()["data"]["attributes"]["last_analysis_stats"]
             result["ToolMessage"] += f"score vt (url) : {VirusTotal.getScore(stats)}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : url report not handleled on {result["EnrichToolName"]}")
 
@@ -49,6 +53,8 @@ class VirusTotal(EnrichTool):
             response = req.get(url, headers=self.apiInfos)
             stats = response.json()["data"]["attributes"]["last_analysis_stats"]
             result["ToolMessage"] += f"score vt (hash) : {VirusTotal.getScore(stats)}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : hash report not handleled on {result["EnrichToolName"]}")
 
@@ -59,9 +65,10 @@ class VirusTotal(EnrichTool):
             response = req.get(url, headers=self.apiInfos)
             stats = response.json()["data"]["attributes"]["last_analysis_stats"]
             result["ToolMessage"] += f"score vt (mail) : {VirusTotal.getScore(stats)}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : mail report not handleled on {result["EnrichToolName"]}")
-
         return result
 
     def getScore(stats):
