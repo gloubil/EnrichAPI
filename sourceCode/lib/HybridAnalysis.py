@@ -26,7 +26,8 @@ class HybridAnalysis(EnrichTool):
             response = req.post(url, headers=self.apiInfos, data={"hash" : hash_})
             value = response.json()[0]["verdict"]
             result["ToolMessage"] += f"verdict : {value}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : hash report not handleled on {result["EnrichToolName"]}")
-
         return result

@@ -2,13 +2,14 @@ from lib.EnrichApp import EnrichApp
 
 from flask import Flask, request
 
+import time
+
 api = Flask(__name__)
 app = EnrichApp()
 
-api.secret_key = "bijzbvhzribvjzrbvjoezbovzebnhieohvzreo"
-
 @api.route("/enrique", methods=['GET'])
 def enrique():
+    start = time.time()
     if request.method == 'GET':
         try:
             ip = request.args["ip"]
@@ -26,7 +27,8 @@ def enrique():
             url = request.args["url"]
         except:
             url = None
-    return {"data" : app.run({"ip" : ip, "hash" : hash, "mail" : mail, "url" : url})}
+    data = app.run({"ip" : ip, "hash" : hash, "mail" : mail, "url" : url})
+    return {"data" : data}
 
 
 

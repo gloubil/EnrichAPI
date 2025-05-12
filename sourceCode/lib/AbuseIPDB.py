@@ -24,7 +24,8 @@ class AbuseIPDB(EnrichTool):
             response = req.get(url)
             value = response.json()["data"]["totalReports"]
             result["ToolMessage"] += f"totalReports : {value}\n"
+        except KeyError:
+            None
         except:
             print(f"WARNING : ip report not handleled on {result["EnrichToolName"]}")
-
         return result
