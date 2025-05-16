@@ -14,18 +14,18 @@ class AbuseIPDB(EnrichTool):
     def getReport(self, iocs):
         # Setup du rapport
         result = EnrichTool.BASE_REPORT.copy()
-        result["EnrichToolName"] = "AbuseIPDB"
-        result["ToolMessage"] = ""
+        result['EnrichToolName'] = "AbuseIPDB"
+        result['ToolMessage'] = ""
         
         # Traitement des IOCs
         try:
-            ip = iocs["ip"]
-            url = f"{AbuseIPDB.BASE_URL["ip"]}?ipAddress={ip}&maxAgeInDays=30&verbose&key={self.apiInfos["apiKey"]}"
+            ip = iocs['ip']
+            url = f"{AbuseIPDB.BASE_URL['ip']}?ipAddress={ip}&maxAgeInDays=30&verbose&key={self.apiInfos['apiKey']}"
             response = req.get(url)
-            value = response.json()["data"]["totalReports"]
-            result["ToolMessage"] += f"totalReports : {value}\n"
+            value = response.json()['data']['totalReports']
+            result['ToolMessage'] += f"totalReports : {value}\n"
         except KeyError:
             None
         except:
-            print(f"WARNING : ip report not handleled on {result["EnrichToolName"]}")
+            print(f"WARNING : ip report not handleled on {result['EnrichToolName']}")
         return result
