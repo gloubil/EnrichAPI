@@ -1,6 +1,0 @@
-**Diagramme des classes**
-=========================
-
-.. image:: diagClassesEnrichAPI.png
-   :width: 1200px
-   :alt: Diagramme des Classes
