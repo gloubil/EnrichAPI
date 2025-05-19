@@ -1,0 +1,12 @@
+**ReportGiver**
+===============
+
+.. image:: reportGiver.png
+   :width: 200px
+   :alt: Diagramme ReportGiver
+
+Classe Observer auto-gérée par EnrichApp (rien à faire dessus sauf debug).
+
+Elle stocke dans 'enrichTool' tous les :doc:`enrichTool` actifs et les appellent
+par la méthode getReports()
+

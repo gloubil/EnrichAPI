@@ -1,0 +1,45 @@
+**EnrichTool**
+==============
+
+.. image:: EnrichTool.png
+   :width: 400px
+   :alt: Diagramme EnrichTool
+
+L'interface EnrichTool est une classe 'observable' servant à l'intégration des APIs
+de scan d'IOCs.
+Chaque classe qui implémente EnrichTool doit contenir une méthode pour chaque IOC que vous voulez scanner.
+Ces méthodes sont de la forme :
+
+get{ioc}Report(iocValue).
+
+Les méthodes renvoient un dictionnaire sous cette forme :
+
+    ``{"iocType" : "{type d'ioc}", "iocValue" : "{votre ioc|Not Handleled}", report : {rapport}}``
+
+Exemple d'implémentation d'EnrichTool (AbuseIPDB) :
+
+.. code-block:: python
+
+    from lib.EnrichTool import EnrichTool
+
+    import requests as req
+
+    class AbuseIPDB(EnrichTool):
+
+        BASE_URL = {
+            "ip" : "https://api.abuseipdb.com/api/v2/check"
+        }
+
+        def __init__(self, apiKey):
+            self.apiInfos = {"apiKey" : apiKey}
+            self.toolName = "AbuseIPDB"
+
+
+        def getIpReport(self, ipType, iocValue):
+
+            url = f"{AbuseIPDB.BASE_URL['ip']}?ipAddress={iocValue}&maxAgeInDays=30&verbose&key={self.apiInfos['apiKey']}"
+            response = req.get(url)
+            value = response.json()['data']['totalReports']
+
+            return {"iocType" : f"{ipType}", "iocValue" : iocValue, "report" : f"totalReports : {value}"}
+
