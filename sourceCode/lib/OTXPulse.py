@@ -12,96 +12,82 @@ class OTXPulse(EnrichTool):
 
     def __init__(self, apiKey, toShow = 3):
         self.apiKey = apiKey
-        self.actToShow = toShow # Pules info to show
+        self.otx = OTXv2(self.apiKey)
+        self.toolName = "OTX Pulse"
 
-    def get_info(arg):
-        otx, iocType, ioc = arg
-        return otx.get_indicator_details_full(iocType, ioc)
+        self.actToShow = toShow # Pulses info to show
+
+    def get_info(self, iocType, iocValue):
+        details = self.otx.get_indicator_details_full(indicator_type=iocType, indicator=iocValue)
+        try:
+            pulses = details['general']['pulse_info']['pulses']
+        except KeyError:
+            return None
+
+        message = ""
+
+        toShow = self.actToShow
+
+        if toShow > len(pulses):
+            toShow = len(pulses)
+
+        if len(pulses) != 0:
+            for i in range(toShow):
+                pulse = pulses[i]
+                message += pulse['name'] + " | "
+            message = message[:-3]
+        else: message = "No Activities Detected"
+
+        return message
     
-    def getReport(self, iocs):
-        # Setup du rapport
-        result = EnrichTool.BASE_REPORT.copy()
-        result['EnrichToolName'] = "OTX Pulse"
-        result['ToolMessage'] = ""
+    def getIpReport(self, ipType, iocValue):
 
-        args = []
+        if ipType == "IPv4":
+            indicatorType = IndicatorTypes.IPv4
+        elif ipType == "IPv6":
+             indicatorType = IndicatorTypes.IPv6
+        else:
+            return {"iocType" : f"{ipType}", "iocValue" : "Not Handleled", "report" : None}
+        
+        infos = self.get_info(indicatorType, iocValue)
 
-        otx = OTXv2(self.apiKey)
+        if infos == None:
+            return {"iocType" : f"{ipType}", "iocValue" : "Not Handleled", "report" : None}
 
-        try:
-            ioc = iocs["ip"]
-            if ioc != "" and ioc != None:
-                args.append((otx, IndicatorTypes.IPv4, ioc))
-        except KeyError:
-            None
-        except:
-            print(f"WARNING : ip report not handleled on {result['EnrichToolName']}")
+        return {"iocType" : f"{ipType}", "iocValue" : iocValue, "report" : infos}
+    
+    def getHashReport(self, hashType, iocValue):
 
-        try:
-            ioc = iocs["url"]
-            if ioc != "" and ioc != None:
-                args.append((otx, IndicatorTypes.URL, ioc))
-        except KeyError:
-            None
-        except:
-            print(f"WARNING : url report not handleled on {result['EnrichToolName']}")
+        if hashType == "SHA1":
+            indicatorType = IndicatorTypes.FILE_HASH_SHA1
+        elif hashType == "SHA256":
+             indicatorType = IndicatorTypes.FILE_HASH_SHA256
+        elif hashType == "MD5":
+             indicatorType = IndicatorTypes.FILE_HASH_MD5
+        else:
+            return {"iocType" : f"{hashType}", "iocValue" : "Not Handleled", "report" : None}
+        
+        infos = self.get_info(indicatorType, iocValue)
 
-        try:
-            ioc = iocs["hash"]
-            if ioc != "" and ioc != None:
-                args.append((otx, IndicatorTypes.FILE_HASH_SHA1, ioc))
-        except KeyError:
-            None
-        except:
-            print(f"WARNING : hash report not handleled on {result['EnrichToolName']}")
+        if infos == None:
+            return {"iocType" : f"{hashType}", "iocValue" : "Not Handleled", "report" : None}
 
-        try:
-            ioc = iocs["mail"]
-            if ioc != "" and ioc != None:
-                args.append((otx, IndicatorTypes.EMAIL, ioc))
-        except KeyError:
-            None
-        except:
-            print(f"WARNING : mail report not handleled on {result['EnrichToolName']}")
+        return {"iocType" : f"{hashType}", "iocValue" : iocValue, "report" : infos}
+    
+    def getDomainReport(self, iocValue):
+        
+        infos = self.get_info(IndicatorTypes.DOMAIN, iocValue)
 
-        data = [OTXPulse.get_info(arg) for arg in args]
+        if infos == None:
+            return {"iocType" : "DOMAIN", "iocValue" : "Not Handleled", "report" : None}
 
-        # if __name__ == 'lib.OTXPulse': # AssertionError: daemonic processes are not allowed to have children
-        #     with Pool(len(args)) as p:
-        #         data = p.map(OTXPulse.get_info, args)
+        return {"iocType" : "DOMAIN", "iocValue" : iocValue, "report" : infos}
+    
+    def getMailReport(self, iocValue):
 
+        infos = self.get_info(IndicatorTypes.EMAIL, iocValue)
 
-        for line in data:
-            message = self.formatMessage(line)
+        if infos == None:
+            return {"iocType" : "MAIL", "iocValue" : "Not Handleled", "report" : None}
 
-            result['ToolMessage'] += message + "\n\n"
-
-        return result
-
-
-
-    def formatMessage(self, line):
-        try:
-            pulses = line['general']['pulse_info']['pulses']
-            iocType = line['general']['type']
-            iocValue = line['general']['indicator']
-
-            message = ""
-
-            toShow = self.actToShow
-
-            if toShow > len(pulses):
-                toShow = len(pulses)
-
-            if len(pulses) != 0:
-                for i in range(toShow):
-                    pulse = pulses[i]
-                    message += pulse['name'] + "\n"
-            else: message = "No Activities"
-
-            message = " | " + iocType + " : " + iocValue + " Activity :\n" + message
-
-            return message
-        except KeyError:
-            return ""
-
+        return {"iocType" : "MAIL", "iocValue" : iocValue, "report" : infos}
