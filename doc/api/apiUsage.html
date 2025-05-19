@@ -35,16 +35,25 @@
           <div class="body" role="main">
             
   <section id="api-usage">
-<h1><strong>API Usage</strong><a class="headerlink" href="#api-usage" title="Lien vers cette rubrique">¶</a></h1>
+<h1>API Usage<a class="headerlink" href="#api-usage" title="Lien vers cette rubrique">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <section id="commands">
 <h2>Commands<a class="headerlink" href="#commands" title="Lien vers cette rubrique">¶</a></h2>
 <section id="get-enrique-ioc-iocvalue">
 <h3>GET : /enrique?IOC=iocValue<a class="headerlink" href="#get-enrique-ioc-iocvalue" title="Lien vers cette rubrique">¶</a></h3>
-<p>IOCs params : ip, hash, mail, url</p>
+<p>IOCs params : ip, hash, mail, domain</p>
 <p>Example :
-<code class="docutils literal notranslate"><span class="pre">/enrique?ip=0.0.0.0&amp;hash=hejovnzeovze&amp;mail=jesuisbogoss&#64;univ-tours.fr&amp;url=http://www.bogoss.com/</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">/enrique?ip=0.0.0.0&amp;hash=hejovnzeovze&amp;mail=jesuisbogoss&#64;univ-tours.fr&amp;domain=bogoss.com</span></code></p>
+<p>Forme des IOCs :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;ip&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;domain&quot;</span> <span class="p">:</span> <span class="s2">&quot;---.com | ---.fr | ...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mail&quot;</span> <span class="p">:</span> <span class="s2">&quot;mail@domaine.ext&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hash&quot;</span> <span class="p">:</span> <span class="s2">&quot;SHA1:hash | SHA256:hash | MD5:hash&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -77,7 +86,11 @@
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Sections</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="apiIndex.html"><strong>API</strong></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="apiIndex.html"><strong>API</strong></a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">API Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apiInfos.html"><strong>API Infos</strong></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../code/codeIndex.html"><strong>Code</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../credLinks/credLinksIndex.html"><strong>Credentials &amp; Liens API</strong></a></li>
 </ul>

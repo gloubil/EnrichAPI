@@ -7,12 +7,14 @@
 
 L'interface EnrichTool est une classe 'observable' servant à l'intégration des APIs
 de scan d'IOCs.
-Chaque classe qui implémente EnrichTool doit contenir une méthode getReport(iocs)
-renvoyant un dictionnaire sous cette forme :
+Chaque classe qui implémente EnrichTool doit contenir une méthode pour chaque IOC que vous voulez scanner.
+Ces méthodes sont de la forme :
 
-    ``{"EnrichToolName" : "{Name}", "ToolMessage" : "{field1} : {value1}\n{field2} : {value2}\n..et ainsi de suite"}``
+get{ioc}Report(iocValue).
 
-Un template de ce type de dictionnaire est disponible dans la constante EnrichTool.BASE_REPORT.
+Les méthodes renvoient un dictionnaire sous cette forme :
+
+    ``{"iocType" : "{type d'ioc}", "iocValue" : "{votre ioc|Not Handleled}", report : {rapport}}``
 
 Exemple d'implémentation d'EnrichTool (AbuseIPDB) :
 
@@ -30,36 +32,14 @@ Exemple d'implémentation d'EnrichTool (AbuseIPDB) :
 
         def __init__(self, apiKey):
             self.apiInfos = {"apiKey" : apiKey}
+            self.toolName = "AbuseIPDB"
 
-        def getReport(self, iocs):
-            # Setup du rapport
-            result = EnrichTool.BASE_REPORT.copy()
-            result["EnrichToolName"] = "AbuseIPDB"
-            result["ToolMessage"] = ""
-            
-            # Traitement des IOCs
-            try:
-                ip = iocs["ip"]
-                url = f"{AbuseIPDB.BASE_URL["ip"]}?ipAddress={ip}&maxAgeInDays=30&verbose&key={self.apiInfos["apiKey"]}"
-                response = req.get(url)
-                value = response.json()["data"]["totalReports"]
-                result["ToolMessage"] += f"totalReports : {value}\n"
-            except:
-                print(f"WARNING : ip report not handleled on {result["EnrichToolName"]}")
 
-            return result
+        def getIpReport(self, ipType, iocValue):
 
-Globalement, vous pouvez faire ce que vous voulez dans votre EnrichTool, tant que la méthode getReport
-retourne un dictionnaire de type EnrichTool.BASE_REPORT avec un dictionnaire d'iocs en paramètre.
+            url = f"{AbuseIPDB.BASE_URL['ip']}?ipAddress={iocValue}&maxAgeInDays=30&verbose&key={self.apiInfos['apiKey']}"
+            response = req.get(url)
+            value = response.json()['data']['totalReports']
 
-Le dictionnaire 'iocs' passé en paramètres est un dictionnaire de cette forme :
-
-.. code-block:: python
-
-    {
-        "ip" : "0.0.0.0",
-        "url" : "http://.../...",
-        "mail" : "mail@domaine.ext",
-        "hash" : "signature SHA1-SHA256..."
-    }
+            return {"iocType" : f"{ipType}", "iocValue" : iocValue, "report" : f"totalReports : {value}"}
 
