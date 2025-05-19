@@ -1,0 +1,14 @@
+**Ajouter un EnrichTool**
+=========================
+
+Pour ajouter un :doc:`enrichTool`, vous pouvez implémenter les méthodes
+par type d'ioc disponibles dans :doc:`enrichTool`.
+
+Les méthodes doivent retourner un dictionnaire de cette forme :
+
+``{"iocType" : "{type d'ioc}", "iocValue" : "{votre ioc|Not Handleled}", report : {rapport}}``
+
+
+Ensuite, il faut ajouter une instance de la classe fille de :doc:`enrichTool` dans :doc:`enrichApp`.
+Pour cela il faut importer la classe de votre :doc:`enrichTool` dans l'app puis
+l'ajouter dans le constructeur (__init__). Voir plus de détails dans la page :doc:`enrichApp`.

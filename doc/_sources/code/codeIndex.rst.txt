@@ -1,0 +1,12 @@
+**Code**
+========
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Pages
+
+   diagClasses
+   enrichTool
+   enrichApp
+   addExtention
+   reportGiver

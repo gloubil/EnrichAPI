@@ -1,0 +1,55 @@
+**EnrichApp**
+=============
+
+.. image:: EnrichApp.png
+   :width: 200px
+   :alt: Diagramme EnrichApp
+
+La classe EnrichApp sert de classe principale à toute l'application.
+Elle gère tous les :doc:`enrichTool` avec leurs credentials.
+
+Une fois votre :doc:`enrichTool` construit (dans lib), c'est dans cette classe qu'il faut l'ajouter.
+Pour cela, il y a 2 choses à faire :
+
+    1. Importer la classe :doc:`enrichTool` dans la classe EnrichApp.
+    #. Ajouter une instance de votre :doc:`enrichTool` dans le constructeur (le __init__) d'EnrichApp.
+
+Les étapes en détail :
+
+1. Import de l':doc:`enrichTool` :
+
+.. code-block:: python
+
+    from lib.ReportGiver import ReportGiver
+
+    # Importez les classes dérivées de EnrichTool ici
+    from lib.AbuseIPDB import AbuseIPDB
+    from lib.HybridAnalysis import HybridAnalysis
+    from lib.VirusTotal import VirusTotal
+
+    class EnrichApp:
+        """
+            Classe main appelée par l'API
+        """
+
+        def __init__(self):
+            self.reportGiver = ReportGiver()
+
+2. Ajout de l'instance :
+
+.. code-block:: python
+
+    class EnrichApp:
+    """
+        Classe main appelée par l'API
+    """
+
+        def __init__(self):
+            self.reportGiver = ReportGiver()
+
+            # Ajoutez les EnrichTools ici avec self.add(tool)
+            self.add(AbuseIPDB("API-KEY"))
+            self.add(HybridAnalysis("API-KEY"))
+            self.add(VirusTotal("API-KEY"))
+
+        def add(self, tool):
