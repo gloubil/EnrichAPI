@@ -15,7 +15,7 @@
     <script src="../_static/translations.js?v=e6b791cb"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
-    <link rel="next" title="Credentials &amp; Liens API" href="../credLinks/credLinksIndex.html" />
+    <link rel="next" title="ReportGiver" href="reportGiver.html" />
     <link rel="prev" title="EnrichApp" href="enrichApp.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -36,13 +36,11 @@
             
   <section id="ajouter-un-enrichtool">
 <h1><strong>Ajouter un EnrichTool</strong><a class="headerlink" href="#ajouter-un-enrichtool" title="Lien vers cette rubrique">¶</a></h1>
-<p>Pour ajouter un <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a>, il faut implémenter son interface
-donc intégrer toutes ses méthodes.</p>
+<p>Pour ajouter un <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a>, vous pouvez implémenter les méthodes
+par type d’ioc disponibles dans <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a>.</p>
 <p>Les méthodes doivent retourner un dictionnaire de cette forme :</p>
-<p><code class="docutils literal notranslate"><span class="pre">{&quot;EnrichToolName&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{Name}&quot;,</span> <span class="pre">&quot;ToolMessage&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{field}</span> <span class="pre">:</span> <span class="pre">{value}\n&quot;}</span></code></p>
-<p>Pour ajouter plusieurs champs dans un même <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a>, retourner:</p>
-<p><code class="docutils literal notranslate"><span class="pre">{&quot;EnrichToolName&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{Name}&quot;,</span> <span class="pre">&quot;ToolMessage&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{field1}</span> <span class="pre">:</span> <span class="pre">{value1}\n{field2}</span> <span class="pre">:</span> <span class="pre">{value2}\n..et</span> <span class="pre">ainsi</span> <span class="pre">de</span> <span class="pre">suite&quot;}</span></code></p>
-<p>Ensuite, il faut ajouter une instance du nouvel <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a> dans <a class="reference internal" href="enrichApp.html"><span class="doc">EnrichApp</span></a>.
+<p><code class="docutils literal notranslate"><span class="pre">{&quot;iocType&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{type</span> <span class="pre">d'ioc}&quot;,</span> <span class="pre">&quot;iocValue&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{votre</span> <span class="pre">ioc|Not</span> <span class="pre">Handleled}&quot;,</span> <span class="pre">report</span> <span class="pre">:</span> <span class="pre">{rapport}}</span></code></p>
+<p>Ensuite, il faut ajouter une instance de la classe fille de <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a> dans <a class="reference internal" href="enrichApp.html"><span class="doc">EnrichApp</span></a>.
 Pour cela il faut importer la classe de votre <a class="reference internal" href="enrichTool.html"><span class="doc">EnrichTool</span></a> dans l’app puis
 l’ajouter dans le constructeur (__init__). Voir plus de détails dans la page <a class="reference internal" href="enrichApp.html"><span class="doc">EnrichApp</span></a>.</p>
 </section>
@@ -76,7 +74,14 @@ l’ajouter dans le constructeur (__init__). Voir plus de détails dans la page 
 <p class="caption" role="heading"><span class="caption-text">Sections</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/apiIndex.html"><strong>API</strong></a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="codeIndex.html"><strong>Code</strong></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="codeIndex.html"><strong>Code</strong></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="diagClasses.html"><strong>Diagramme des classes</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="enrichTool.html"><strong>EnrichTool</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="enrichApp.html"><strong>EnrichApp</strong></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><strong>Ajouter un EnrichTool</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reportGiver.html"><strong>ReportGiver</strong></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../credLinks/credLinksIndex.html"><strong>Credentials &amp; Liens API</strong></a></li>
 </ul>
 
@@ -86,7 +91,7 @@ l’ajouter dans le constructeur (__init__). Voir plus de détails dans la page 
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="codeIndex.html"><strong>Code</strong></a><ul>
       <li>Previous: <a href="enrichApp.html" title="Chapitre précédent"><strong>EnrichApp</strong></a></li>
-      <li>Next: <a href="../credLinks/credLinksIndex.html" title="Chapitre suivant"><strong>Credentials &amp; Liens API</strong></a></li>
+      <li>Next: <a href="reportGiver.html" title="Chapitre suivant"><strong>ReportGiver</strong></a></li>
   </ul></li>
   </ul></li>
 </ul>

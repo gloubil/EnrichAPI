@@ -34,7 +34,7 @@ Liste des API utilisées avec leur liens pour les utiliser :
 
 #. Virus Total
 
-    Lien vers la doc : 
+    Lien vers la doc : https://docs.virustotal.com/
 
     ============== ====================================================== ========================================================================
      IOC            URL                                                      params
@@ -47,7 +47,7 @@ Liste des API utilisées avec leur liens pour les utiliser :
                                                                           | accept : "application/json"
                                                                           | x-apikey : API-KEY
     -------------- ------------------------------------------------------ ------------------------------------------------------------------------
-     Mail           (GET) https://www.virustotal.com/api/v3/domains/      | headers :
+     Domains        (GET) https://www.virustotal.com/api/v3/domains/      | headers :
                                                                           | accept : "application/json"
                                                                           | x-apikey : API-KEY
     -------------- ------------------------------------------------------ ------------------------------------------------------------------------
@@ -55,3 +55,7 @@ Liste des API utilisées avec leur liens pour les utiliser :
                                                                           | accept : "application/json"
                                                                           | x-apikey : API-KEY
     ============== ====================================================== ========================================================================
+
+#. AlienVault OTX
+
+    Lien vers la doc : https://github.com/AlienVault-OTX/OTX-Python-SDK

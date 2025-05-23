@@ -40,12 +40,13 @@
 </a>
 <p>L’interface EnrichTool est une classe “observable” servant à l’intégration des APIs
 de scan d’IOCs.
-Chaque classe qui implémente EnrichTool doit contenir une méthode getReport(iocs)
-renvoyant un dictionnaire sous cette forme :</p>
+Chaque classe qui implémente EnrichTool doit contenir une méthode pour chaque IOC que vous voulez scanner.
+Ces méthodes sont de la forme :</p>
+<p>get{ioc}Report(iocValue).</p>
+<p>Les méthodes renvoient un dictionnaire sous cette forme :</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">{&quot;EnrichToolName&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{Name}&quot;,</span> <span class="pre">&quot;ToolMessage&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{field1}</span> <span class="pre">:</span> <span class="pre">{value1}\n{field2}</span> <span class="pre">:</span> <span class="pre">{value2}\n..et</span> <span class="pre">ainsi</span> <span class="pre">de</span> <span class="pre">suite&quot;}</span></code></p>
+<div><p><code class="docutils literal notranslate"><span class="pre">{&quot;iocType&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{type</span> <span class="pre">d'ioc}&quot;,</span> <span class="pre">&quot;iocValue&quot;</span> <span class="pre">:</span> <span class="pre">&quot;{votre</span> <span class="pre">ioc|Not</span> <span class="pre">Handleled}&quot;,</span> <span class="pre">report</span> <span class="pre">:</span> <span class="pre">{rapport}}</span></code></p>
 </div></blockquote>
-<p>Un template de ce type de dictionnaire est disponible dans la constante EnrichTool.BASE_REPORT.</p>
 <p>Exemple d’implémentation d’EnrichTool (AbuseIPDB) :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lib.EnrichTool</span> <span class="kn">import</span> <span class="n">EnrichTool</span>
 
@@ -59,35 +60,16 @@ renvoyant un dictionnaire sous cette forme :</p>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apiKey</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apiInfos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;apiKey&quot;</span> <span class="p">:</span> <span class="n">apiKey</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolName</span> <span class="o">=</span> <span class="s2">&quot;AbuseIPDB&quot;</span>
 
-    <span class="k">def</span> <span class="nf">getReport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iocs</span><span class="p">):</span>
-        <span class="c1"># Setup du rapport</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">EnrichTool</span><span class="o">.</span><span class="n">BASE_REPORT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;EnrichToolName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;AbuseIPDB&quot;</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;ToolMessage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="c1"># Traitement des IOCs</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ip</span> <span class="o">=</span> <span class="n">iocs</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">AbuseIPDB</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">?ipAddress=</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&amp;maxAgeInDays=30&amp;verbose&amp;key=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">apiInfos</span><span class="p">[</span><span class="s2">&quot;apiKey&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;totalReports&quot;</span><span class="p">]</span>
-            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;ToolMessage&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;totalReports : </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING : ip report not handleled on </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;EnrichToolName&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">getIpReport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ipType</span><span class="p">,</span> <span class="n">iocValue</span><span class="p">):</span>
 
-        <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>Globalement, vous pouvez faire ce que vous voulez dans votre EnrichTool, tant que la méthode getReport
-retourne un dictionnaire de type EnrichTool.BASE_REPORT avec un dictionnaire d’iocs en paramètre.</p>
-<p>Le dictionnaire “iocs” passé en paramètres est un dictionnaire de cette forme :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;ip&quot;</span> <span class="p">:</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;url&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://.../...&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;mail&quot;</span> <span class="p">:</span> <span class="s2">&quot;mail@domaine.ext&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;hash&quot;</span> <span class="p">:</span> <span class="s2">&quot;signature SHA1-SHA256...&quot;</span>
-<span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">AbuseIPDB</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">?ipAddress=</span><span class="si">{</span><span class="n">iocValue</span><span class="si">}</span><span class="s2">&amp;maxAgeInDays=30&amp;verbose&amp;key=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">apiInfos</span><span class="p">[</span><span class="s1">&#39;apiKey&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;totalReports&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;iocType&quot;</span> <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ipType</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;iocValue&quot;</span> <span class="p">:</span> <span class="n">iocValue</span><span class="p">,</span> <span class="s2">&quot;report&quot;</span> <span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;totalReports : </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -121,7 +103,14 @@ retourne un dictionnaire de type EnrichTool.BASE_REPORT avec un dictionnaire d�
 <p class="caption" role="heading"><span class="caption-text">Sections</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api/apiIndex.html"><strong>API</strong></a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="codeIndex.html"><strong>Code</strong></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="codeIndex.html"><strong>Code</strong></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="diagClasses.html"><strong>Diagramme des classes</strong></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><strong>EnrichTool</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="enrichApp.html"><strong>EnrichApp</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="addExtention.html"><strong>Ajouter un EnrichTool</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reportGiver.html"><strong>ReportGiver</strong></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../credLinks/credLinksIndex.html"><strong>Credentials &amp; Liens API</strong></a></li>
 </ul>
 

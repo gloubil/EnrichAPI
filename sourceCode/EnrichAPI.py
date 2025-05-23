@@ -14,20 +14,20 @@ def enrique():
         try:
             ip = request.args["ip"]
         except:
-            ip = None
+            ip = ""
         try:
             hash = request.args["hash"]
         except:
-            hash = None
+            hash = ""
         try:
             mail = request.args["mail"]
         except:
-            mail = None
+            mail = ""
         try:
-            url = request.args["url"]
+            domain = request.args["domain"]
         except:
-            url = None
-    data = app.run({"ip" : ip, "hash" : hash, "mail" : mail, "url" : url})
+            domain = ""
+    data = app.run({"ip" : ip, "hash" : hash, "mail" : mail, "domain" : domain})
     return {"data" : data}
 
 
