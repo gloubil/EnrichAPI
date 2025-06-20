@@ -32,20 +32,21 @@ class EnrichTool:
         for ioc in iocs:
             if iocs[ioc] != "" and iocs[ioc] != None:
                 iocValue = iocs[ioc]
+                try:
+                    if ioc == "ip":
+                        reports.append(self.getIpReport("IPv4", iocValue))
 
-                if ioc == "ip":
-                    reports.append(self.getIpReport("IPv4", iocValue))
+                    elif ioc == "hash":
+                        hashType, hashValue = parseHash(iocValue)
+                        reports.append(self.getHashReport(hashType, hashValue))
 
-                elif ioc == "hash":
-                    hashType, hashValue = parseHash(iocValue)
-                    reports.append(self.getHashReport(hashType, hashValue))
+                    elif ioc == "domain":
+                        reports.append(self.getDomainReport(iocValue))
 
-                elif ioc == "domain":
-                    reports.append(self.getDomainReport(iocValue))
-
-                elif ioc == "mail":
-                    reports.append(self.getMailReport(iocValue))
-
+                    elif ioc == "mail":
+                        reports.append(self.getMailReport(iocValue))
+                except Exception as e:
+                    print(str(e))
         output["reports"] = reports
 
         return output
