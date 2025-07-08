@@ -45,6 +45,8 @@ class EnrichTool:
 
                     elif ioc == "mail":
                         reports.append(self.getMailReport(iocValue))
+                    elif ioc == "url":
+                        reports.append(self.getURLReport(iocValue))
                 except Exception as e:
                     print(str(e))
         output["reports"] = reports
@@ -64,3 +66,6 @@ class EnrichTool:
     
     def getMailReport(self, iocValue):
         return {"iocType" : "MAIL", "iocValue" : "Not Handleled", "report" : None}
+    
+    def getURLReport(self, iocValue):
+        return {"iocType" : "URL", "iocValue" : "Not Handleled", "report" : None}

@@ -2,6 +2,7 @@ from lib.EnrichTool import EnrichTool
 
 import requests as req
 import re
+import base64
 
 class VirusTotal(EnrichTool):
 
@@ -9,7 +10,8 @@ class VirusTotal(EnrichTool):
         "domain" : "https://www.virustotal.com/api/v3/domains/",
         "ip" : "https://www.virustotal.com/api/v3/ip_addresses/",
         "hash" : "https://www.virustotal.com/api/v3/files/",
-        "mail" : "https://www.virustotal.com/api/v3/domains/"
+        "mail" : "https://www.virustotal.com/api/v3/domains/",
+        "url" : "https://www.virustotal.com/api/v3/urls/"
     }
 
     def __init__(self, apikey):
@@ -72,3 +74,13 @@ class VirusTotal(EnrichTool):
         score = VirusTotal.getScore(stats)
 
         return {"iocType" : "MAILDOMAIN", "iocValue" : iocValue, "report" : f"Score VT : {score}"}
+    
+    def getURLReport(self, iocValue):
+        url_id = base64.urlsafe_b64encode(iocValue.encode()).decode().strip("=")
+
+        reponse = req.get(f"{VirusTotal.BASE_URL['url']}{url_id}", headers=self.apiInfos)
+
+        stats = reponse.json()['data']['attributes']['last_analysis_stats']
+        score = VirusTotal.getScore(stats)
+        
+        return {"iocType" : "URL", "iocValue" : iocValue, "report" : f"Score VT : {score}"}
