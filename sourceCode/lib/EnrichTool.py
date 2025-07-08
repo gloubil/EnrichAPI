@@ -1,3 +1,5 @@
+import socket
+
 class EnrichTool:
     """
         Interface EnrichTool Observable
@@ -6,7 +8,20 @@ class EnrichTool:
     def __init__(self):
         self.toolName = "ToolTemplate"
 
-
+    def dnsResolve(domain):
+        def getIP(d):
+            """
+            This method returns the first IP address string
+            that responds as the given domain name
+            """
+            try:
+                result = socket.getaddrinfo(domain, None, socket.AF_INET)
+                ip = result[0][4][0]
+                return ip
+            except Exception:
+                # fail gracefully!
+                return False
+        return str(getIP(domain))
 
     def getReport(self, iocs : dict):
         """
@@ -45,6 +60,8 @@ class EnrichTool:
 
                     elif ioc == "mail":
                         reports.append(self.getMailReport(iocValue))
+                    elif ioc == "url":
+                        reports.append(self.getURLReport(iocValue))
                 except Exception as e:
                     print(str(e))
         output["reports"] = reports
@@ -64,3 +81,6 @@ class EnrichTool:
     
     def getMailReport(self, iocValue):
         return {"iocType" : "MAIL", "iocValue" : "Not Handleled", "report" : None}
+    
+    def getURLReport(self, iocValue):
+        return {"iocType" : "URL", "iocValue" : "Not Handleled", "report" : None}

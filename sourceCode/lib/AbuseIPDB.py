@@ -1,6 +1,8 @@
 from lib.EnrichTool import EnrichTool
+from lib.VirusTotal import VirusTotal
 
 import requests as req
+import re
 
 class AbuseIPDB(EnrichTool):
 
@@ -21,4 +23,35 @@ class AbuseIPDB(EnrichTool):
 
         return {"iocType" : f"{ipType}", "iocValue" : iocValue, "report" : f"totalReports : {value}"}
     
+    def getDomainReport(self, iocValue):
+        domainIp = EnrichTool.dnsResolve(iocValue)
+        report = self.getIpReport("IPv4", domainIp)
+        report["iocType"] = "DOMAIN"
+        report["iocValue"] = iocValue
+        return report
     
+    def getMailReport(self, iocValue):
+        def getMailDomain(mail : str):
+            for i in range(len(mail)):
+                if mail[i] == "@":
+                    return mail[i+1:]
+            return ""
+        
+        domain = getMailDomain(iocValue)
+        report = self.getDomainReport(domain)
+        report["iocType"] = "MAILDOMAIN"
+        report["iocValue"] = iocValue
+
+        return report
+    
+    def getURLReport(self, iocValue):
+        regex = r'https?://([a-zA-Z0-9.-]+)/?.*'
+        matches = re.findall(regex, iocValue)
+        if matches == []:
+            return super().getURLReport(iocValue)
+        domain = matches[0]
+        report = self.getDomainReport(domain)
+        report["iocType"] = "MAILDOMAIN"
+        report["iocValue"] = iocValue
+
+        return report
