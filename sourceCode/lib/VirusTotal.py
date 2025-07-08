@@ -3,6 +3,7 @@ from lib.EnrichTool import EnrichTool
 import requests as req
 import re
 import base64
+import socket
 
 class VirusTotal(EnrichTool):
 
@@ -11,7 +12,8 @@ class VirusTotal(EnrichTool):
         "ip" : "https://www.virustotal.com/api/v3/ip_addresses/",
         "hash" : "https://www.virustotal.com/api/v3/files/",
         "mail" : "https://www.virustotal.com/api/v3/domains/",
-        "url" : "https://www.virustotal.com/api/v3/urls/"
+        "url" : "https://www.virustotal.com/api/v3/urls/",
+        "dns" : "https://www.virustotal.com/api/v3/resolutions/"
     }
 
     def __init__(self, apikey):
@@ -27,6 +29,9 @@ class VirusTotal(EnrichTool):
             total += int(stats[arg])
         score = f"{stats['malicious']}/{total}"
         return score
+
+    def getID(value : str):
+        return base64.urlsafe_b64encode(value.encode()).decode().strip("=")
 
     def getIpReport(self, ipType, iocValue):
 
@@ -66,7 +71,7 @@ class VirusTotal(EnrichTool):
         domain = getMailDomain(iocValue)
         
         if domain == "":
-            return {"iocType" : "MAILDOMAIN", "report" : None}
+            return super().getMailReport(iocValue)
 
         url = f"{VirusTotal.BASE_URL['mail']}{domain}"
         response = req.get(url, headers=self.apiInfos)
@@ -74,9 +79,9 @@ class VirusTotal(EnrichTool):
         score = VirusTotal.getScore(stats)
 
         return {"iocType" : "MAILDOMAIN", "iocValue" : iocValue, "report" : f"Score VT : {score}"}
-    
+
     def getURLReport(self, iocValue):
-        url_id = base64.urlsafe_b64encode(iocValue.encode()).decode().strip("=")
+        url_id = VirusTotal.getID(iocValue)
 
         reponse = req.get(f"{VirusTotal.BASE_URL['url']}{url_id}", headers=self.apiInfos)
 
